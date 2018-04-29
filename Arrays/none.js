@@ -1,0 +1,10 @@
+// none
+
+// Returns true if the provided predicate function returns false for all elements in a collection, false otherwise.
+
+// Use Array.some() to test if any elements in the collection return true based on fn. Omit the second argument, fn, to use Boolean as a default.
+
+// const none = (arr, fn = Boolean) => !arr.some(fn);
+
+none([0, 1, 3, 0], x => x == 2); // true
+none([0, 0, 0]); // true
