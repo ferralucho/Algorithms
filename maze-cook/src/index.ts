@@ -1,6 +1,11 @@
 const pattern = "CCC-DDD-EEE-DDD-CCC-DDD-EEE-DDD-CCC-DDD-EEE-DDD";
 const shortPattern = "CCC-DDD-EEE-DDD";
 
+interface StartCoordinates {
+  horizontal: number;
+  vertical: number;
+}
+
 //0   1    2    3    4    5    6    7    8    9    10   11
 const grid = 
 [
@@ -20,12 +25,15 @@ const grid =
 
 let path = '';
 
-function sweep(horizontal, vertical: number) {
+function sweep(coordinates: StartCoordinates) {
+  const { horizontal, vertical } = coordinates;
+
   if (
     grid[horizontal][vertical] == 'B' &&
-    horizontal !== bHorizontalStart &&
-    vertical !== bVerticalStart
+    horizontal !== initialCoordinates.horizontal &&
+    vertical !== initialCoordinates.vertical
   ) {
+    //found the end b and solved the maze
     endSolveMaze(horizontal, vertical);
   } else if (validNextPath(horizontal, vertical)) {
     addValidToPath(horizontal, vertical);
@@ -37,7 +45,7 @@ function sweep(horizontal, vertical: number) {
   }
 }
 
-function addValidToPath(horizontal, vertical: number) {
+function addValidToPath(horizontal, vertical: number): void {
   let auxPath = path.slice();
   let partialPattern = '';
   let stringToSearch = '';
@@ -65,7 +73,7 @@ function addValidToPath(horizontal, vertical: number) {
   }
 }
 
-function endSolveMaze(horizontal, vertical: number) {
+function endSolveMaze(horizontal, vertical: number): void {
   console.log('Maze solved at (' + horizontal + ', ' + vertical + ')');
   console.table(grid);
   path = 'B-' + shortPattern + '-' + path;
@@ -73,18 +81,18 @@ function endSolveMaze(horizontal, vertical: number) {
   console.log('path', path);
 }
 
-function sweepSides(horizontal, vertical: number) {
+function sweepSides(horizontal, vertical: number): void {
   if (horizontal < grid.length - 1) {
-    sweep(horizontal + 1, vertical);
+    sweep({ horizontal: horizontal + 1, vertical });
   }
   if (vertical < grid[horizontal].length - 1) {
-    sweep(horizontal, vertical + 1);
+    sweep({ horizontal, vertical: vertical + 1 });
   }
   if (horizontal > 0) {
-    sweep(horizontal - 1, vertical);
+    sweep({ horizontal: horizontal - 1, vertical });
   }
   if (vertical > 0) {
-    sweep(horizontal, vertical - 1);
+    sweep({ horizontal, vertical: vertical - 1 });
   }
 }
 
@@ -97,10 +105,16 @@ function validNextPath(h, v: number): boolean {
 }
 
 //start coordinates for the initial B (Initial B will be marked as visited with a K)
-const bHorizontalStart: number = 0;
-const bVerticalStart: number = 1;
+const initialCoordinates: StartCoordinates = {
+  horizontal: 0,
+  vertical: 1,
+};
 
 console.log(
-  'Maze started at (' + bHorizontalStart + ', ' + bVerticalStart + ')',
+  'Maze started at (' +
+    initialCoordinates.horizontal +
+    ', ' +
+    initialCoordinates.vertical +
+    ')',
 );
-sweep(bHorizontalStart, bVerticalStart);
+sweep(initialCoordinates);
