@@ -13,7 +13,10 @@ export interface Grid {
 export class Maze {
   //0   1    2    3    4    5    6    7    8    9    10   11
 
-  constructor(private grid: Grid) {}
+  constructor(
+    private grid: Grid,
+    private initialCoordinates: GridCoordinates,
+  ) {}
 
   path = '';
 
@@ -98,21 +101,23 @@ export class Maze {
     return true;
   }
 
-  //start coordinates for the initial B (Initial B will be marked as visited with a K)
-  initialCoordinates: GridCoordinates = {
-    horizontal: 0,
-    vertical: 1,
-  };
-
   initMazeChallenge(): void {
-    console.log(
-      'Maze started at (' +
-        this.initialCoordinates.horizontal +
-        ', ' +
-        this.initialCoordinates.vertical +
-        ')',
-    );
-    this.sweep(this.initialCoordinates);
+    if (
+      initialCoordinates &&
+      initialCoordinates.horizontal >= 0 &&
+      initialCoordinates.vertical >= 0
+      && grid.cells.length > 0
+    ) {
+      console.log(
+        'Maze started at (' +
+          this.initialCoordinates.horizontal +
+          ', ' +
+          this.initialCoordinates.vertical +
+          ')',
+      );
+
+      this.sweep(this.initialCoordinates);
+    }
   }
 }
 
@@ -133,5 +138,11 @@ let grid: Grid = {
   ],
 };
 
-let maze = new Maze(grid);
+//start coordinates for the initial B (Initial B will be marked as visited with a K)
+const initialCoordinates: GridCoordinates = {
+  horizontal: 0,
+  vertical: 1,
+};
+
+let maze = new Maze(grid, initialCoordinates);
 maze.initMazeChallenge();
