@@ -1,5 +1,7 @@
 #Cook Maze
 
+To run and build, please see scripts section in package.json
+
 Propose grid, connect B points following pattern: CCC-DDD-EEE-DDD
 
 [
