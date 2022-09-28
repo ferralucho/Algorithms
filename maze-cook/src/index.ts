@@ -20,24 +20,24 @@ const grid =
 
 let path = '';
 
-function sweep(horizontal, vertical) {
+function sweep(horizontal, vertical: number) {
   if (
     grid[horizontal][vertical] == 'B' &&
     horizontal !== bHorizontalStart &&
     vertical !== bVerticalStart
   ) {
-    endSolveMaze(horizontal, vertical, grid);
-  } else if (validNextPath(grid, horizontal, vertical)) {
+    endSolveMaze(horizontal, vertical);
+  } else if (validNextPath(horizontal, vertical)) {
     addValidToPath(horizontal, vertical);
 
     //mark the visited cell with K
     grid[horizontal][vertical] = 'K';
 
-    sweepSides(horizontal, grid, vertical);
+    sweepSides(horizontal, vertical);
   }
 }
 
-function addValidToPath(horizontal: any, vertical: any) {
+function addValidToPath(horizontal, vertical: number) {
   let auxPath = path.slice();
   let partialPattern = '';
   let stringToSearch = '';
@@ -65,7 +65,7 @@ function addValidToPath(horizontal: any, vertical: any) {
   }
 }
 
-function endSolveMaze(horizontal: any, vertical: any, grid: any) {
+function endSolveMaze(horizontal, vertical: number) {
   console.log('Maze solved at (' + horizontal + ', ' + vertical + ')');
   console.table(grid);
   path = 'B-' + shortPattern + '-' + path;
@@ -73,7 +73,7 @@ function endSolveMaze(horizontal: any, vertical: any, grid: any) {
   console.log('path', path);
 }
 
-function sweepSides(horizontal: any, grid: any, vertical: any) {
+function sweepSides(horizontal, vertical: number) {
   if (horizontal < grid.length - 1) {
     sweep(horizontal + 1, vertical);
   }
@@ -89,7 +89,7 @@ function sweepSides(horizontal: any, grid: any, vertical: any) {
 }
 
 //valid if it's not an invalid letter or visited
-function validNextPath(grid, h, v): boolean {
+function validNextPath(h, v: number): boolean {
   if (grid[h][v] === 'A' || grid[h][v] === 'K') {
     return false;
   }
@@ -97,8 +97,8 @@ function validNextPath(grid, h, v): boolean {
 }
 
 //start coordinates for the initial B (Initial B will be marked as visited with a K)
-const bHorizontalStart = 0;
-const bVerticalStart = 1;
+const bHorizontalStart: number = 0;
+const bVerticalStart: number = 1;
 
 console.log(
   'Maze started at (' + bHorizontalStart + ', ' + bVerticalStart + ')',
