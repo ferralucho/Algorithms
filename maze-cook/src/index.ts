@@ -10,7 +10,112 @@ export interface Grid {
   cells: string[][];
 }
 
-//0   1    2    3    4    5    6    7    8    9    10   11
+export class Maze {
+  //0   1    2    3    4    5    6    7    8    9    10   11
+
+  constructor(private grid: Grid) {}
+
+  path = '';
+
+  sweep(coordinates: GridCoordinates) {
+    const { horizontal, vertical } = coordinates;
+
+    if (
+      this.grid.cells[horizontal][vertical] == 'B' &&
+      horizontal !== this.initialCoordinates.horizontal &&
+      vertical !== this.initialCoordinates.vertical
+    ) {
+      //found the end b and solved the maze
+      this.endSolveMaze(horizontal, vertical);
+    } else if (this.validNextPath(horizontal, vertical)) {
+      this.addValidToPath(horizontal, vertical);
+
+      //mark the visited cell with K
+      this.grid.cells[horizontal][vertical] = 'K';
+
+      this.sweepSides(horizontal, vertical);
+    }
+  }
+
+  addValidToPath(horizontal, vertical: number): void {
+    let auxPath = this.path.slice();
+    let partialPattern = '';
+    let stringToSearch = '';
+    let auxLastIndex = auxPath.lastIndexOf(pattern);
+    if (auxLastIndex >= 0) {
+      partialPattern = auxPath.slice(auxLastIndex);
+      stringToSearch = partialPattern + this.grid.cells[horizontal][vertical];
+    } else {
+      partialPattern = pattern;
+    }
+
+    if (
+      (auxPath.length == partialPattern.length &&
+        stringToSearch.indexOf(partialPattern) >= 0) ||
+      (auxPath.length >= pattern.length &&
+        auxPath.indexOf(
+          pattern + this.grid.cells[horizontal][vertical],
+          auxLastIndex,
+        ) > 0) ||
+      pattern.indexOf(auxPath + this.grid.cells[horizontal][vertical]) >= 0
+    ) {
+      this.path += this.grid.cells[horizontal][vertical];
+
+      if (this.path.length === 3 || (this.path.length + 1) % 4 == 0) {
+        this.path += '-';
+      }
+    }
+  }
+
+  endSolveMaze(horizontal, vertical: number): void {
+    console.log('Maze solved at (' + horizontal + ', ' + vertical + ')');
+    console.table(this.grid.cells);
+    this.path = 'B-' + shortPattern + '-' + this.path;
+    this.path += '-' + this.grid.cells[horizontal][vertical];
+    console.log('path', this.path);
+  }
+
+  sweepSides(horizontal, vertical: number): void {
+    if (horizontal < this.grid.cells.length - 1) {
+      this.sweep({ horizontal: horizontal + 1, vertical });
+    }
+    if (vertical < this.grid.cells[horizontal].length - 1) {
+      this.sweep({ horizontal, vertical: vertical + 1 });
+    }
+    if (horizontal > 0) {
+      this.sweep({ horizontal: horizontal - 1, vertical });
+    }
+    if (vertical > 0) {
+      this.sweep({ horizontal, vertical: vertical - 1 });
+    }
+  }
+
+  //valid if it's not an invalid letter or visited
+  validNextPath(h, v: number): boolean {
+    if (this.grid.cells[h][v] === 'A' || this.grid.cells[h][v] === 'K') {
+      return false;
+    }
+    return true;
+  }
+
+  //start coordinates for the initial B (Initial B will be marked as visited with a K)
+  initialCoordinates: GridCoordinates = {
+    horizontal: 0,
+    vertical: 1,
+  };
+
+  initMazeChallenge(): void {
+    console.log(
+      'Maze started at (' +
+        this.initialCoordinates.horizontal +
+        ', ' +
+        this.initialCoordinates.vertical +
+        ')',
+    );
+    this.sweep(this.initialCoordinates);
+  }
+}
+
 let grid: Grid = {
   cells: [
     ['A', 'T', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
@@ -28,102 +133,5 @@ let grid: Grid = {
   ],
 };
 
-let path = '';
-
-export function sweep(coordinates: GridCoordinates) {
-  const { horizontal, vertical } = coordinates;
-
-  if (
-    grid.cells[horizontal][vertical] == 'B' &&
-    horizontal !== initialCoordinates.horizontal &&
-    vertical !== initialCoordinates.vertical
-  ) {
-    //found the end b and solved the maze
-    endSolveMaze(horizontal, vertical);
-  } else if (validNextPath(horizontal, vertical)) {
-    addValidToPath(horizontal, vertical);
-
-    //mark the visited cell with K
-    grid.cells[horizontal][vertical] = 'K';
-
-    sweepSides(horizontal, vertical);
-  }
-}
-
-export function addValidToPath(horizontal, vertical: number): void {
-  let auxPath = path.slice();
-  let partialPattern = '';
-  let stringToSearch = '';
-  let auxLastIndex = auxPath.lastIndexOf(pattern);
-  if (auxLastIndex >= 0) {
-    partialPattern = auxPath.slice(auxLastIndex);
-    stringToSearch = partialPattern + grid.cells[horizontal][vertical];
-  } else {
-    partialPattern = pattern;
-  }
-
-  if (
-    (auxPath.length == partialPattern.length &&
-      stringToSearch.indexOf(partialPattern) >= 0) ||
-    (auxPath.length >= pattern.length &&
-      auxPath.indexOf(pattern + grid.cells[horizontal][vertical], auxLastIndex) >
-        0) ||
-    pattern.indexOf(auxPath + grid.cells[horizontal][vertical]) >= 0
-  ) {
-    path += grid.cells[horizontal][vertical];
-
-    if (path.length === 3 || (path.length + 1) % 4 == 0) {
-      path += '-';
-    }
-  }
-}
-
-function endSolveMaze(horizontal, vertical: number): void {
-  console.log('Maze solved at (' + horizontal + ', ' + vertical + ')');
-  console.table(grid.cells);
-  path = 'B-' + shortPattern + '-' + path;
-  path += '-' + grid.cells[horizontal][vertical];
-  console.log('path', path);
-}
-
-function sweepSides(horizontal, vertical: number): void {
-  if (horizontal < grid.cells.length - 1) {
-    sweep({ horizontal: horizontal + 1, vertical });
-  }
-  if (vertical < grid.cells[horizontal].length - 1) {
-    sweep({ horizontal, vertical: vertical + 1 });
-  }
-  if (horizontal > 0) {
-    sweep({ horizontal: horizontal - 1, vertical });
-  }
-  if (vertical > 0) {
-    sweep({ horizontal, vertical: vertical - 1 });
-  }
-}
-
-//valid if it's not an invalid letter or visited
-function validNextPath(h, v: number): boolean {
-  if (grid.cells[h][v] === 'A' || grid.cells[h][v] === 'K') {
-    return false;
-  }
-  return true;
-}
-
-//start coordinates for the initial B (Initial B will be marked as visited with a K)
-const initialCoordinates: GridCoordinates = {
-  horizontal: 0,
-  vertical: 1,
-};
-
-export function initMazeChallenge(): void {
-  console.log(
-    'Maze started at (' +
-      initialCoordinates.horizontal +
-      ', ' +
-      initialCoordinates.vertical +
-      ')',
-  );
-  sweep(initialCoordinates);
-}
-
-initMazeChallenge();
+let maze = new Maze(grid);
+maze.initMazeChallenge();
