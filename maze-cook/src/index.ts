@@ -1,7 +1,7 @@
 const pattern = "CCC-DDD-EEE-DDD-CCC-DDD-EEE-DDD-CCC-DDD-EEE-DDD";
 const shortPattern = "CCC-DDD-EEE-DDD";
 
-interface StartCoordinates {
+export interface GridCoordinates {
   horizontal: number;
   vertical: number;
 }
@@ -25,7 +25,7 @@ const grid =
 
 let path = '';
 
-function sweep(coordinates: StartCoordinates) {
+export function sweep(coordinates: GridCoordinates) {
   const { horizontal, vertical } = coordinates;
 
   if (
@@ -45,7 +45,7 @@ function sweep(coordinates: StartCoordinates) {
   }
 }
 
-function addValidToPath(horizontal, vertical: number): void {
+export function addValidToPath(horizontal, vertical: number): void {
   let auxPath = path.slice();
   let partialPattern = '';
   let stringToSearch = '';
@@ -97,7 +97,7 @@ function sweepSides(horizontal, vertical: number): void {
 }
 
 //valid if it's not an invalid letter or visited
-function validNextPath(h, v: number): boolean {
+export function validNextPath(h, v: number): boolean {
   if (grid[h][v] === 'A' || grid[h][v] === 'K') {
     return false;
   }
@@ -105,7 +105,7 @@ function validNextPath(h, v: number): boolean {
 }
 
 //start coordinates for the initial B (Initial B will be marked as visited with a K)
-const initialCoordinates: StartCoordinates = {
+const initialCoordinates: GridCoordinates = {
   horizontal: 0,
   vertical: 1,
 };
