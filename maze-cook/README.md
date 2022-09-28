@@ -1,5 +1,7 @@
 #Cook Maze
 
+Repo: https://github.com/ferralucho/Algorithms/tree/master/maze-cook
+
 To run and build, please see scripts section in package.json
 
 Propose grid, connect B points following pattern: CCC-DDD-EEE-DDD
