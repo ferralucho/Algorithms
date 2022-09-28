@@ -20,7 +20,7 @@ const grid =
 
 let path = '';
 
-function sweep(grid, horizontal, vertical) {
+function sweep(horizontal, vertical) {
   if (
     grid[horizontal][vertical] == 'B' &&
     horizontal !== bHorizontalStart &&
@@ -28,7 +28,7 @@ function sweep(grid, horizontal, vertical) {
   ) {
     endSolveMaze(horizontal, vertical, grid);
   } else if (validNextPath(grid, horizontal, vertical)) {
-    addValidToPath(grid, horizontal, vertical);
+    addValidToPath(horizontal, vertical);
 
     //mark the visited cell with K
     grid[horizontal][vertical] = 'K';
@@ -37,7 +37,7 @@ function sweep(grid, horizontal, vertical) {
   }
 }
 
-function addValidToPath(grid: any, horizontal: any, vertical: any) {
+function addValidToPath(horizontal: any, vertical: any) {
   let auxPath = path.slice();
   let partialPattern = '';
   let stringToSearch = '';
@@ -58,7 +58,6 @@ function addValidToPath(grid: any, horizontal: any, vertical: any) {
     pattern.indexOf(auxPath + grid[horizontal][vertical]) >= 0
   ) {
     path += grid[horizontal][vertical];
-    console.log('path', path);
 
     if (path.length === 3 || (path.length + 1) % 4 == 0) {
       path += '-';
@@ -76,20 +75,20 @@ function endSolveMaze(horizontal: any, vertical: any, grid: any) {
 
 function sweepSides(horizontal: any, grid: any, vertical: any) {
   if (horizontal < grid.length - 1) {
-    sweep(grid, horizontal + 1, vertical);
+    sweep(horizontal + 1, vertical);
   }
   if (vertical < grid[horizontal].length - 1) {
-    sweep(grid, horizontal, vertical + 1);
+    sweep(horizontal, vertical + 1);
   }
   if (horizontal > 0) {
-    sweep(grid, horizontal - 1, vertical);
+    sweep(horizontal - 1, vertical);
   }
   if (vertical > 0) {
-    sweep(grid, horizontal, vertical - 1);
+    sweep(horizontal, vertical - 1);
   }
 }
 
-//valid if it's not an invalid letter for the pattern or visited
+//valid if it's not an invalid letter or visited
 function validNextPath(grid, h, v): boolean {
   if (grid[h][v] === 'A' || grid[h][v] === 'K') {
     return false;
@@ -101,4 +100,7 @@ function validNextPath(grid, h, v): boolean {
 const bHorizontalStart = 0;
 const bVerticalStart = 1;
 
-sweep(grid, bHorizontalStart, bVerticalStart);
+console.log(
+  'Maze started at (' + bHorizontalStart + ', ' + bVerticalStart + ')',
+);
+sweep(bHorizontalStart, bVerticalStart);
