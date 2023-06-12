@@ -1,8 +1,6 @@
 function solution(length, fares){
     const credit = 20;
     const rides = ["UberX", "UberXL", "UberPlus", "UberBlack", "UberSUV"]
-    let bestFare = 0;
-    let bestCar = "";
 
     const index = fares.findLastIndex((fare, i) => {
         console.log({i, length, fare, result: fare * length})
