@@ -11,8 +11,6 @@ function solution(length, fares){
 
 const sol = solution(30, [0.3, 0.5, 0.7, 1, 1.3])
 
-console.log(sol);
-
 describe('solution', () => {
     test('returns the correct index of the fare', () => {
         expect(sol).toBe(1);
