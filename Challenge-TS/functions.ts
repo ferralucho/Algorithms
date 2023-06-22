@@ -1,5 +1,5 @@
 function simpleIsPalindrome(str: string): boolean {
-    return true;
+    return str.split('').reverse().join('') === str;
 }
 
 export default simpleIsPalindrome;

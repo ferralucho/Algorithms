@@ -1,8 +1,8 @@
-const {  } = require('./index');
+const { isForOfPalindrome } = require('./index');
   
-  describe('', () => {
-    test('returns true ', () => {
-  
+  describe('isForOfPalindrome', () => {
+    test('returns true if is palindrome', () => {
+      expect(isForOfPalindrome('racecar'));
     });
   });
   

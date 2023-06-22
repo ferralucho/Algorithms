@@ -7,4 +7,8 @@ describe('simpleIsPalindrome', () => {
       expect(simpleIsPalindrome('madam')).toBe(true);
       expect(simpleIsPalindrome('12321')).toBe(true);
     });
+
+    test('returns false for non palindromic strings', () => {
+      expect(simpleIsPalindrome('tree')).toBe(false);
+    });
   });
